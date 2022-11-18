@@ -1,7 +1,29 @@
 
 import fs from 'fs'
 
+const parseUser = (userString) => {
+  const user = userString.split(' ').reduce((prev, curr) => {
+    const keyValue = curr.trim().split(':')
+    return {
+      ...prev,
+      [keyValue[0]]: keyValue[1]
+    }
+  }, {})
+  return user
+}
+
+const requiredFields = ['usr', 'eme', 'psw', 'age', 'loc', 'fll']
+const isValid = (user) => {
+  return requiredFields.every(field => user[field] !== undefined)
+}
+
 export function getValidUsers(inputLines) {
+  return inputLines
+    .map(line => line === '' ? '###' : line) //prepare user separator
+    .join('') //concat in one line
+    .split('###') //split one line per user
+    .map(parseUser)
+    .filter(isValid)
 }
 
 // in-source test suites
@@ -12,6 +34,7 @@ if (import.meta.vitest) {
 
   it('validUsers sample', () => {
     const validUsers = getValidUsers(inputLines)
+    console.log(validUsers)
     expect(validUsers).toBeDefined()
     expect(validUsers).toHaveLength(3)
     expect(validUsers.at(-1).usr).toBe('@itziar')
