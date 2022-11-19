@@ -2,7 +2,7 @@
 import fs from 'fs'
 
 const parseUser = (userString) => {
-  const user = userString.split(' ').reduce((prev, curr) => {
+  const user = userString.split(' ').filter(kv => kv !== '').reduce((prev, curr) => {
     const keyValue = curr.trim().split(':')
     return {
       ...prev,
@@ -19,7 +19,7 @@ const isValid = (user) => {
 
 export function getValidUsers(inputLines) {
   return inputLines
-    .map(line => line === '' ? '###' : line) //prepare user separator
+    .map(line => line === '' ? '###' : `${line} `) //prepare user separator
     .join('') //concat in one line
     .split('###') //split one line per user
     .map(parseUser)
@@ -34,9 +34,23 @@ if (import.meta.vitest) {
 
   it('validUsers sample', () => {
     const validUsers = getValidUsers(inputLines)
-    console.log(validUsers)
+    const uniqueValidUsers = [...new Set(validUsers)];
+    // console.log(validUsers)
+
     expect(validUsers).toBeDefined()
-    expect(validUsers).toHaveLength(3)
+    expect(uniqueValidUsers).toHaveLength(3)
     expect(validUsers.at(-1).usr).toBe('@itziar')
+  })
+
+  const inputLinesSolution = fs.readFileSync('challenge01.input.txt', 'UTF-8').split('\n')
+
+  it('validUsers solution', () => {
+    const validUsers = getValidUsers(inputLinesSolution)
+    const uniqueValidUsers = [...new Set(validUsers)];
+    // console.log(validUsers)
+
+    expect(validUsers).toBeDefined()
+    expect(uniqueValidUsers).toHaveLength(156)
+    expect(validUsers.at(-1).usr).toBe('@giroz')
   })
 }
