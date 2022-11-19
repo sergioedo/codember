@@ -21,11 +21,19 @@ if (import.meta.vitest) {
   const { it, expect } = import.meta.vitest
 
   const inputLines = fs.readFileSync('challenge02.input.sample.txt', 'UTF-8').split('\n')
-
   it('decrypt sample', () => {
     const decryptedMessage = decrypt(inputLines)
     const expectedMessage = ['midu', 'codember', 'codember midu', 'play tetris'];
-    // console.log(validUsers)
+
+    expect(decryptedMessage).toBeDefined()
+    expect(decryptedMessage).toHaveLength(expectedMessage.length)
+    expect(JSON.stringify(decryptedMessage)).toBe(JSON.stringify(expectedMessage))
+  })
+
+  const inputLines2 = fs.readFileSync('challenge02.input.txt', 'UTF-8').split('\n')
+  it('decrypt challenge', () => {
+    const decryptedMessage = decrypt(inputLines2)
+    const expectedMessage = ['thanks for playing codember please share'];
 
     expect(decryptedMessage).toBeDefined()
     expect(decryptedMessage).toHaveLength(expectedMessage.length)
